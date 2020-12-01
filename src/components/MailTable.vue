@@ -1,5 +1,4 @@
 <template>
-  <h1>{{ emailSelection.emails.size }} emails selected</h1>
   <bulk-action-bar :emails="unarchivedEmails" />
   <table class="mail-table">
     <tbody>

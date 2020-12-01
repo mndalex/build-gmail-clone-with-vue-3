@@ -26,7 +26,11 @@
           </p>
         </td>
         <td @click="openEmail(email)" class="date">{{ formatDate(email.sentAt) }}</td>
-        <td><button @click="archiveEmail(email)">Archive</button></td>
+        <td>
+          <button @click="toggleArchive(email)">
+            {{ email.archived ? 'Unarchive' : 'Archive' }}
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -75,8 +79,8 @@ export default {
         this.updateEmail(email);
       }
     },
-    archiveEmail(email) {
-      email.archived = true;
+    toggleArchive(email) {
+      email.archived = !email.archived;
       this.updateEmail(email);
     },
     updateEmail(email) {

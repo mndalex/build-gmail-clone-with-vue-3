@@ -15,7 +15,7 @@
           </p>
         </td>
         <td class="date">{{ formatDate(email.sentAt) }}</td>
-        <td><button @click="archiveEmail(email)">Archive</button></td>
+        <td><button @click.stop="archiveEmail(email)">Archive</button></td>
       </tr>
     </tbody>
   </table>

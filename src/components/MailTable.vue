@@ -1,9 +1,13 @@
 <template>
-  <bulk-action-bar :emails="unarchivedEmails" />
+  <button :disabled="selectedScreen === 'inbox'" @click="selectScreen('inbox')">Inbox</button>
+  <button :disabled="selectedScreen === 'archived'" @click="selectScreen('archived')">
+    Archived
+  </button>
+  <bulk-action-bar :emails="filteredEmails" />
   <table class="mail-table">
     <tbody>
       <tr
-        v-for="email in unarchivedEmails"
+        v-for="email in filteredEmails"
         :key="email.id"
         :class="['clickable', email.read && 'read']"
       >
@@ -53,9 +57,14 @@ export default {
       emails: ref(emails),
       openedEmail: ref(null),
       emailSelection: useEmailSelection(),
+      selectedScreen: ref('inbox'),
     };
   },
   methods: {
+    selectScreen(newScreen) {
+      this.selectedScreen = newScreen;
+      this.emailSelection.clear();
+    },
     formatDate(date) {
       return format(new Date(date), 'MMM do yyyy');
     },
@@ -93,7 +102,7 @@ export default {
       }
 
       if (changeIndex) {
-        const emails = this.unarchivedEmails;
+        const emails = this.filteredEmails;
         const currentIndex = emails.indexOf(this.openedEmail);
         const newEmail = emails[currentIndex + changeIndex];
         this.openEmail(newEmail);
@@ -106,8 +115,12 @@ export default {
         return email1.sentAt < email2.sentAt;
       });
     },
-    unarchivedEmails() {
-      return this.sortedEmails.filter(email => !email.archived);
+    filteredEmails() {
+      if (this.selectedScreen === 'inbox') {
+        return this.sortedEmails.filter(email => !email.archived);
+      } else {
+        return this.sortedEmails.filter(email => email.archived);
+      }
     },
   },
 };

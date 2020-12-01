@@ -29,8 +29,8 @@ export const useEmailSelection = function() {
 
   const markRead = () => forSelected(e => (e.read = true));
   const markUnread = () => forSelected(e => (e.read = false));
-  const archive = () => {
-    forSelected(e => (e.archived = true));
+  const toggleArchive = () => {
+    forSelected(e => (e.archived = !e.archived));
     emails.clear();
   };
 
@@ -41,7 +41,7 @@ export const useEmailSelection = function() {
     addMultiple,
     markRead,
     markUnread,
-    archive,
+    toggleArchive,
   };
 };
 

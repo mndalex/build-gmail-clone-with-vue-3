@@ -21,8 +21,8 @@
       >
         Mark Unread
       </button>
-      <button @click="emailSelection.archive()" :disabled="numberSelected === 0">
-        Archive
+      <button @click="emailSelection.toggleArchive()" :disabled="numberSelected === 0">
+        {{ isEmailsArchived ? 'Unarchive' : 'Archive' }}
       </button>
     </span>
   </div>
@@ -37,13 +37,19 @@ export default {
     const emailSelection = useEmailSelection();
 
     let numberSelected = computed(() => emailSelection.emails.size);
-    let numberEmails = props.emails.length;
+    let numberEmails = computed(() => props.emails.length);
 
-    let allEmailsSelected = computed(() => numberSelected.value === numberEmails);
+    let allEmailsSelected = computed(
+      () => numberSelected.value > 0 && numberSelected.value === numberEmails.value,
+    );
 
     let someEmailsSelected = computed(
-      () => numberSelected.value > 0 && numberSelected.value < numberEmails,
+      () => numberSelected.value > 0 && numberSelected.value < numberEmails.value,
     );
+
+    let isEmailsArchived = computed(() => {
+      return !!props.emails.find(email => email.archived);
+    });
 
     let bulkSelect = function() {
       if (allEmailsSelected.value) {
@@ -59,6 +65,7 @@ export default {
       bulkSelect,
       emailSelection,
       numberSelected,
+      isEmailsArchived,
     };
   },
   props: {
